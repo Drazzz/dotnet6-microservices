@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.AddSwagger();
 builder.AddSerilog();
+builder.Services.AddCors();
 
 var app = builder.Build();
 var environment = app.Environment;
