@@ -54,6 +54,7 @@ namespace Catalog.Domain
             Name = name;
             Description = description;
             Summary = summary;
+            LastModifiedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
         }
 
         public void ChangeProductPriceTo(Money newPrice)
@@ -61,8 +62,13 @@ namespace Catalog.Domain
             ArgumentNullException.ThrowIfNull(newPrice, nameof(newPrice));
             
             Price = newPrice;
+            LastModifiedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
         }
 
-        public void AssignToThe(CategoryType newCategory) => Category = newCategory;
+        public void AssignToThe(CategoryType newCategory)
+        {
+            Category = newCategory;
+            LastModifiedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
+        }
     }
 }
