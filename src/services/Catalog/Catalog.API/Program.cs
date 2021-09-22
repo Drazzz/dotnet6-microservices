@@ -1,10 +1,11 @@
+using Carter;
 using Catalog.API.Extensions;
-using Catalog.Domain;
 using Catalog.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Register services to the container.
+builder.Services.AddCarter();
 builder.Services.AddOptions();
 builder.AddSwagger();
 builder.AddSerilog();
@@ -28,21 +29,6 @@ app
     .EnsureCatalogDatabaseIsCreated(environment)
     ;
 app.MapFallback(() => Results.Redirect("/swagger"));
-
-//Minimal API
-app.MapGet("/api/products", async (IProductRepository repo, CancellationToken token) =>
-{
-    return await repo.GetProducts() switch
-    {
-        IReadOnlyCollection<Product> products => Results.Ok(products),
-        null => Results.NotFound()
-    };
-})
-    //SAME AS: //=> await repo.GetProducts() is IReadOnlyCollection<Product> products ? Results.Ok(products) : Results.NotFound()
-    //.RequireAuthorization("policyName1", "policyName2")
-    .WithName("GetProducts")
-    .Produces<IReadOnlyCollection<Product>>(200)
-    .Produces(404)
-    ;
+app.MapCarter();
 
 app.Run();

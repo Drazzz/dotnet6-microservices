@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Carter" Version="6.0.0-pre2" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="4.1.2" />
     <PackageReference Include="Serilog.Sinks.SpectreConsole" Version="0.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.1" />
