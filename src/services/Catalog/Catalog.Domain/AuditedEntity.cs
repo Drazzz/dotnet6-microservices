@@ -1,18 +1,8 @@
-﻿using NodaTime;
-
-namespace Catalog.Domain
+﻿namespace Catalog.Domain
 {
     public abstract class AuditedEntity : Entity, IAuditedEntity
     {
-        protected IClock _clock;
-
-        protected AuditedEntity(IClock clock)
-        {
-            ArgumentNullException.ThrowIfNull(clock, nameof(clock));
-
-            CreatedDate = clock.GetCurrentInstant().ToDateTimeUtc();
-            _clock = clock;
-        }
+        protected AuditedEntity() => CreatedDate = DateTime.UtcNow;
 
         public DateTime? CreatedDate { get; protected set; }
 

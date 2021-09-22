@@ -12,10 +12,11 @@ namespace Catalog.Domain
         public CategoryType Category { get; private set; }
 
 
-        private Product(string name, string description, string summary, string priceCurrency, decimal amount, short categoryId, IClock clock)
-            : this(Guid.NewGuid(), name, description, summary, new Money(priceCurrency, amount), (CategoryType) categoryId, clock) { }
-        private Product(Guid id, string name, string description, string summary, Money price, CategoryType category, IClock clock)
-            : base(clock)
+        //for EF Core
+        private Product() { }
+        private Product(string name, string description, string summary, string priceCurrency, decimal amount, short categoryId)
+            : this(Guid.NewGuid(), name, description, summary, new Money(priceCurrency, amount), (CategoryType) categoryId) { }
+        private Product(Guid id, string name, string description, string summary, Money price, CategoryType category)
         {
             ArgumentNullException.ThrowIfNull(price, nameof(price));
 
@@ -36,13 +37,15 @@ namespace Catalog.Domain
             Category = category;
         }
 
-        public static Product From(string name, string description, string summary, string priceCurrency, decimal amount, short categoryId, IClock clock)
-            => new Product(name, description, summary, priceCurrency, amount, categoryId, clock);
-        public static Product From(Guid id, string name, string description, string summary, Money price, CategoryType category, IClock clock)
-            => new Product(id, name, description, summary, price, category, clock);
+        public static Product From(string name, string description, string summary, string priceCurrency, decimal amount, short categoryId)
+            => new Product(name, description, summary, priceCurrency, amount, categoryId);
+        public static Product From(Guid id, string name, string description, string summary, Money price, CategoryType category)
+            => new Product(id, name, description, summary, price, category);
+        public static Product From(Product product)
+            => new Product(product.Id, product.Name, product.Description, product.Summary, product.Price, product.Category);
 
 
-        public void ChangeProductTextDescriptionTo(string name, string description, string summary)
+        public void ChangeProductTextDescriptionTo(string name, string description, string summary, IClock clock)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException($"{nameof(name).ToUpperInvariant} cannot be null or empty");
@@ -54,21 +57,24 @@ namespace Catalog.Domain
             Name = name;
             Description = description;
             Summary = summary;
-            LastModifiedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
+            LastModifiedDate = clock.GetCurrentInstant().ToDateTimeUtc();
         }
 
-        public void ChangeProductPriceTo(Money newPrice)
+        public void ChangeProductPriceTo(Money newPrice, IClock clock)
         {
             ArgumentNullException.ThrowIfNull(newPrice, nameof(newPrice));
+            ArgumentNullException.ThrowIfNull(clock, nameof(clock));
             
             Price = newPrice;
-            LastModifiedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
+            LastModifiedDate = clock.GetCurrentInstant().ToDateTimeUtc();
         }
 
-        public void AssignToThe(CategoryType newCategory)
+        public void AssignToThe(CategoryType newCategory, IClock clock)
         {
+            ArgumentNullException.ThrowIfNull(clock, nameof(clock));
+
             Category = newCategory;
-            LastModifiedDate = _clock.GetCurrentInstant().ToDateTimeUtc();
+            LastModifiedDate = clock.GetCurrentInstant().ToDateTimeUtc();
         }
     }
 }

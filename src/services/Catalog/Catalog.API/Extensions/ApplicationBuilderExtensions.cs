@@ -1,4 +1,6 @@
-﻿namespace Catalog.API.Extensions;
+﻿using Catalog.Infrastructure;
+
+namespace Catalog.API.Extensions;
 
 internal static partial class ApplicationBuilderExtensions
 {
@@ -30,6 +32,22 @@ internal static partial class ApplicationBuilderExtensions
             app.UseHsts();
             app.UseHttpsRedirection();
         }
+
+        return app;
+    }
+
+    public static IApplicationBuilder EnsureCatalogDatabaseIsCreated(this IApplicationBuilder app, IWebHostEnvironment environment)
+    {
+        if (environment.IsDevelopment())
+        {
+            using var serviceScope = app.ApplicationServices
+                .GetRequiredService<IServiceScopeFactory>()
+                .CreateScope();
+
+            using var context = serviceScope.ServiceProvider.GetService<CataolgDBContext>();
+            if (context is not null)
+                context.Database.EnsureCreated();
+        }        
 
         return app;
     }

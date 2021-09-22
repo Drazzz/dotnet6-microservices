@@ -1,3 +1,4 @@
+using Catalog.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Catalog.API.Controllers
@@ -12,10 +13,16 @@ namespace Catalog.API.Controllers
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
+        
+        private readonly IProductRepository _productRepository;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, IProductRepository productRepository)
         {
+            ArgumentNullException.ThrowIfNull(productRepository, nameof(productRepository));
+
             _logger = logger;
+            _productRepository = productRepository;
         }
 
         [HttpGet]
@@ -28,6 +35,15 @@ namespace Catalog.API.Controllers
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })
             .ToArray();
+        }
+
+        [HttpGet]
+        [Route("/api/test")]
+        public async Task<IReadOnlyCollection<WeatherForecast>?> GetAllAvailableProducts()
+        {
+            var r = await _productRepository.GetProducts();
+
+            return null;
         }
     }
 }
