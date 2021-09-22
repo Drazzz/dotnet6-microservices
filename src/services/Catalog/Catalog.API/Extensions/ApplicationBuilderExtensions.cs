@@ -38,6 +38,9 @@ internal static partial class ApplicationBuilderExtensions
 
     public static IApplicationBuilder EnsureCatalogDatabaseIsCreated(this IApplicationBuilder app, IWebHostEnvironment environment)
     {
+        ArgumentNullException.ThrowIfNull(nameof(app));
+        ArgumentNullException.ThrowIfNull(nameof(environment));
+
         if (environment.IsDevelopment())
         {
             using var serviceScope = app.ApplicationServices
@@ -46,7 +49,10 @@ internal static partial class ApplicationBuilderExtensions
 
             using var context = serviceScope.ServiceProvider.GetService<CataolgDBContext>();
             if (context is not null)
+            {
+                context.Database.EnsureDeleted();
                 context.Database.EnsureCreated();
+            }                
         }        
 
         return app;

@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Domain
 {
-    public enum CategoryType :  short
+    public enum CategoryType
     {
         Smartphone = 1,
         Tablet,

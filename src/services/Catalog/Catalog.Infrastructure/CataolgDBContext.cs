@@ -6,13 +6,13 @@ using Microsoft.Extensions.Options;
 
 namespace Catalog.Infrastructure
 {
-    public sealed class CataolgDBContext : DbContext
+    public class CataolgDBContext : DbContext
     {
         public const string Name = "CatalogDb";
 
         private readonly CosmosDBOptions _options;
 
-        public DbSet<Product>? Products { get; set; }
+        public virtual DbSet<Product>? Products { get; set; }
 
 
         public CataolgDBContext(IOptions<CosmosDBOptions> options)
@@ -36,6 +36,9 @@ namespace Catalog.Infrastructure
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(ProductEntityTypeConfiguration.Create());
+#if DEBUG
+            modelBuilder.Seed();
+#endif
         }
     }
 }

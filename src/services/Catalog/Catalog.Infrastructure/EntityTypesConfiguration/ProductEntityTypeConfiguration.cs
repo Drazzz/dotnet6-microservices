@@ -24,9 +24,10 @@ namespace Catalog.Infrastructure.EntityTypesConfiguration
 
             builder
                 .Property(p => p.Category)
-                .IsRequired()
                 .HasConversion<string>()
-                ;
+                .HasMaxLength(10)
+                .IsRequired()               
+            ;
 
             builder
                 .OwnsOne(
@@ -34,15 +35,18 @@ namespace Catalog.Infrastructure.EntityTypesConfiguration
                     pr =>
                     {
                         pr.ToJsonProperty("Price");
+                        pr.WithOwner()
+                            .HasForeignKey("ProductId");
+
                         pr.Property(x => x.Currency)
-                            .IsRequired()
-                            .HasMaxLength(3);
+                            .HasMaxLength(1)
+                            .IsRequired();
                         pr.Property(x => x.Amount)
                             .IsRequired();
                     })
                 ;
         }
-
-        public static ProductEntityTypeConfiguration Create() => new ();
+        
+        public static ProductEntityTypeConfiguration Create() => new();
     }
 }

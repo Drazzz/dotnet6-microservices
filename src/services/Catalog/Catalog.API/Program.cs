@@ -45,6 +45,4 @@ app.MapGet("/api/products", async (IProductRepository repo, CancellationToken to
     .Produces(404)
     ;
 
-
-
 app.Run();
