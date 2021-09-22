@@ -32,31 +32,31 @@ internal static partial class ServiceCollectionExtensions
                     Url = new Uri("https://github.com/Drazzz")
                 }
             });
-            //c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-            //{
-            //    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-            //    Name = "Authorization",
-            //    In = ParameterLocation.Header,
-            //    Type = SecuritySchemeType.ApiKey,
-            //    Scheme = "Bearer"
-            //});
-            //c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-            //{
-            //    {
-            //        new OpenApiSecurityScheme
-            //        {
-            //            Reference = new OpenApiReference
-            //            {
-            //                Type = ReferenceType.SecurityScheme,
-            //                Id = "Bearer"
-            //            },
-            //            Scheme = "oauth2",
-            //            Name = "Bearer",
-            //            In = ParameterLocation.Header,
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        },
+                        Scheme = "oauth2",
+                        Name = "Bearer",
+                        In = ParameterLocation.Header,
 
-            //        },
-            //        new List<string>()
-            //}});
+                    },
+                    new List<string>()
+            }});
         });
 
         return services;
