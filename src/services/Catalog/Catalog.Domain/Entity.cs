@@ -1,13 +1,10 @@
 ﻿using BuildingBlocks.Common.Extensions;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 
 namespace Catalog.Domain
 {
     public abstract class Entity
     {
-        [Key] public Guid Id { get; internal set; }
+        public Guid Id { get; internal set; }
 
         public static bool operator ==(Entity left, Entity right) => left?.CompareObjects(right) ?? right is null;
 
