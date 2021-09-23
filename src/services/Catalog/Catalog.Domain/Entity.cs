@@ -1,10 +1,15 @@
-﻿namespace Catalog.Domain
+﻿using BuildingBlocks.Common.Extensions;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
+
+namespace Catalog.Domain
 {
     public abstract class Entity
     {
-        public Guid Id { get; internal set; }
+        [Key] public Guid Id { get; internal set; }
 
-        public static bool operator ==(Entity left, Entity right) => left?.Equals(right) ?? Equals(right, null);
+        public static bool operator ==(Entity left, Entity right) => left?.CompareObjects(right) ?? right is null;
 
         public static bool operator !=(Entity left, Entity right) => !(left == right);
 
@@ -13,16 +18,17 @@
             if (!(obj is Entity))
                 return false;
 
-            if (ReferenceEquals(this, obj))
-                return true;
-
-            if (GetType() != obj.GetType())
-                return false;
-
-            var item = (Entity)obj;
-            return item.Id == Id;
+            return this == (Entity)obj;
         }
 
-        public override int GetHashCode() => Id.GetHashCode();
+        public override int GetHashCode()
+        {
+            var xType = GetType();
+            string stringToHashCode = string.Empty;
+            foreach (var prop in xType.GetProperties())
+                stringToHashCode.Concat(prop.GetValue(this, null)?.ToString()?? string.Empty);
+
+            return stringToHashCode.GetHashCode();
+        }
     }
 }

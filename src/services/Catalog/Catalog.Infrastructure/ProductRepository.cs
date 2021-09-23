@@ -1,4 +1,5 @@
-﻿using Catalog.Domain;
+﻿using BuildingBlocks.Common.Extensions;
+using Catalog.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Infrastructure
@@ -14,7 +15,6 @@ namespace Catalog.Infrastructure
 
             _context = catalogDbContext;
         }
-
 
         public async Task CreateProduct(Product product, CancellationToken cancellationToken = default)
         {
@@ -35,22 +35,22 @@ namespace Catalog.Infrastructure
         }
 
         public Task<Product> GetProduct(Guid id, CancellationToken cancellationToken = default)
-            => _context.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
+            => _context.Products.FindAsync(cancellationToken, id).AsTask();
 
-        public async Task<IReadOnlyCollection<Product>> GetProductsByCategory(CategoryType category, CancellationToken cancellationToken = default)
-            => (await _context.Products.Where(p => p.Category == category).ToListAsync(cancellationToken)).AsReadOnly();
+        public  Task<IReadOnlyCollection<Product>> GetProductsByCategory(CategoryType category, CancellationToken cancellationToken = default)
+            => _context.Products.Where(p => p.Category == category).ToListAsync(cancellationToken).ToReadOnlyCollection();
 
-        public async Task<IReadOnlyCollection<Product>> GetProductByName(string name, CancellationToken cancellationToken = default)
-            => (await _context.Products.Where(p => p.Name == name).ToListAsync(cancellationToken)).AsReadOnly();
+        public  Task<IReadOnlyCollection<Product>> GetProductByName(string name, CancellationToken cancellationToken = default)
+            => _context.Products.Where(p => p.Name == name).ToListAsync(cancellationToken).ToReadOnlyCollection();
 
-        public async Task<IReadOnlyCollection<Product>> GetProducts(CancellationToken cancellationToken = default)
-            => (await _context.Products.ToListAsync(cancellationToken)).AsReadOnly();
+        public Task<IReadOnlyCollection<Product>> GetProducts(CancellationToken cancellationToken = default)
+            => _context.Products.ToListAsync(cancellationToken).ToReadOnlyCollection();
 
         public async Task<bool> UpdateProduct(Product product, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(product, nameof(product));
 
-            var productToUpdate = await _context.Products.SingleOrDefaultAsync(p => p.Id == product.Id, cancellationToken);
+            var productToUpdate = await GetProduct(product.Id, cancellationToken);
             if (productToUpdate is null)
                 throw new ArgumentException($"Product with Id = {product.Id} doesn't exist", nameof(product));
 

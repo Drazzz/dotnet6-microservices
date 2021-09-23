@@ -1,4 +1,6 @@
-﻿namespace Catalog.Domain
+﻿using BuildingBlocks.Common.Extensions;
+
+namespace Catalog.Domain
 {
     public sealed record Money
     {
