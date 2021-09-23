@@ -45,35 +45,23 @@ namespace Catalog.Domain
             => new Product(product.Id, product.Name, product.Description, product.Summary, product.Price, product.Category);
 
 
-        public void ChangeProductTextDescriptionTo(string name, string description, string summary, IClock clock)
+        public void UpdateProduct(string name, string description, string summary, Money price, CategoryType category, IClock clock)
         {
+            ArgumentNullException.ThrowIfNull(price, nameof(price));
+            ArgumentNullException.ThrowIfNull(clock, nameof(clock));
+
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentException($"{nameof(name).ToUpperInvariant} cannot be null or empty");
             if (string.IsNullOrEmpty(description))
                 throw new ArgumentException($"{nameof(description).ToUpperInvariant} cannot be null or empty");
             if (string.IsNullOrEmpty(summary))
                 throw new ArgumentException($"{nameof(summary).ToUpperInvariant} cannot be null or empty");
-
+            
             Name = name;
             Description = description;
             Summary = summary;
-            LastModifiedDate = clock.GetCurrentInstant().ToDateTimeUtc();
-        }
-
-        public void ChangeProductPriceTo(Money newPrice, IClock clock)
-        {
-            ArgumentNullException.ThrowIfNull(newPrice, nameof(newPrice));
-            ArgumentNullException.ThrowIfNull(clock, nameof(clock));
-            
-            Price = newPrice;
-            LastModifiedDate = clock.GetCurrentInstant().ToDateTimeUtc();
-        }
-
-        public void AssignToThe(CategoryType newCategory, IClock clock)
-        {
-            ArgumentNullException.ThrowIfNull(clock, nameof(clock));
-
-            Category = newCategory;
+            Price = price;
+            Category = category;
             LastModifiedDate = clock.GetCurrentInstant().ToDateTimeUtc();
         }
     }

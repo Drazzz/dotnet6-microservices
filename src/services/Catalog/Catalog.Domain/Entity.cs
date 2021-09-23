@@ -6,26 +6,26 @@ namespace Catalog.Domain
     {
         public Guid Id { get; internal set; }
 
-        public static bool operator ==(Entity left, Entity right) => left?.CompareObjects(right) ?? right is null;
 
+        public static bool operator ==(Entity left, Entity right) => left?.Equals(right) ?? Equals(right, null);
         public static bool operator !=(Entity left, Entity right) => !(left == right);
+        
 
         public override bool Equals(object obj)
         {
             if (!(obj is Entity))
                 return false;
 
-            return this == (Entity)obj;
+            if (ReferenceEquals(this, obj))
+                return true;
+
+            if (GetType() != obj.GetType())
+                return false;
+
+            var item = (Entity)obj;
+            return item.Id == Id;
         }
 
-        public override int GetHashCode()
-        {
-            var xType = GetType();
-            string stringToHashCode = string.Empty;
-            foreach (var prop in xType.GetProperties())
-                stringToHashCode.Concat(prop.GetValue(this, null)?.ToString()?? string.Empty);
-
-            return stringToHashCode.GetHashCode();
-        }
+        public override int GetHashCode() => Id.GetHashCode();
     }
 }

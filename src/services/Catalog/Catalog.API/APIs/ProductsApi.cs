@@ -7,23 +7,23 @@ public sealed class ProductsApi : ICarterModule
 {
     private static class Routes
     {
-        internal const string GetAllProducts = "/api/products";
-        internal const string GetProductById = "/api/products/{id:guid}";
-        internal const string GetProductByTheCategoryId = "/api/category/{id:int:min(1)}/products";
+        internal const string Products = "/api/products";
+        internal const string ProductById = "/api/products/{id:guid}";
+        internal const string GetProductByTheCategoryId = "/api/category/{id:int}/products";
         internal const string GetProductsByName = "/api/products/{name}";
     }
 
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet(Routes.GetAllProducts, ProductsFeature.GetAllProducts())
+        app.MapGet(Routes.Products, ProductsFeature.GetAllProducts())
             //.RequireAuthorization("policyName1", "policyName2")
             .WithName("GetProducts")
             .Produces<IReadOnlyCollection<Product>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
         ;
 
-        app.MapGet(Routes.GetProductById, ProductsFeature.GetProductById())
+        app.MapGet(Routes.ProductById, ProductsFeature.GetProductById())
             //.RequireAuthorization("policyName1", "policyName2")
             .WithName("GetProduct")
             .Produces<Product>(StatusCodes.Status200OK)
@@ -43,6 +43,13 @@ public sealed class ProductsApi : ICarterModule
             .Produces<IReadOnlyCollection<Product>>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .Produces(StatusCodes.Status400BadRequest)
+        ;
+
+        app.MapPut(Routes.ProductById, ProductsFeature.UpdateProduct())
+            //.RequireAuthorization("policyName1", "policyName2")
+            .WithName("UpdateProduct")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
         ;
     }    
 }

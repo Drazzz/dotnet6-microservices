@@ -1,3 +1,4 @@
+using BuildingBlocks.Common;
 using Carter;
 using Catalog.API.Extensions;
 using Catalog.Infrastructure;
@@ -9,6 +10,8 @@ builder.Services.AddCarter();
 builder.Services.AddOptions();
 builder.AddSwagger();
 builder.AddSerilog();
+builder.Services.AddCommonServices();
+builder.ApplicationServices();
 builder.Services.AddCatalogCosmosDB();
 builder.Services.AddCatalogRepositories();
 builder.Services.AddAuthentication();

@@ -1,4 +1,6 @@
-﻿using Catalog.Domain;
+﻿using Catalog.API.ApplicationServices;
+using Catalog.API.Models;
+using Catalog.Domain;
 
 namespace Catalog.API;
 
@@ -44,4 +46,11 @@ internal class ProductsFeature
             };
         };
     }
+
+    internal static Func<Guid, UpdateProductCommand, ProductService, CancellationToken, Task<IResult>> UpdateProduct()
+        => async (Guid id, UpdateProductCommand command, ProductService service, CancellationToken token)
+            => await service.UpdateProduct(command, token) is bool result
+            ? Results.NoContent()
+            : Results.NotFound()
+        ;
 }
