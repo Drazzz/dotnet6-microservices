@@ -37,7 +37,7 @@ namespace Catalog.Infrastructure
         public Task<Product> GetProduct(Guid id, CancellationToken cancellationToken = default)
             => _context.Products.FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
 
-        public async Task<IReadOnlyCollection<Product>> GetProductByCategory(CategoryType category, CancellationToken cancellationToken = default)
+        public async Task<IReadOnlyCollection<Product>> GetProductsByCategory(CategoryType category, CancellationToken cancellationToken = default)
             => (await _context.Products.Where(p => p.Category == category).ToListAsync(cancellationToken)).AsReadOnly();
 
         public async Task<IReadOnlyCollection<Product>> GetProductByName(string name, CancellationToken cancellationToken = default)
