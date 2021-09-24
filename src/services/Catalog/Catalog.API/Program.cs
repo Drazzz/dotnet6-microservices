@@ -2,6 +2,7 @@ using BuildingBlocks.Common;
 using Carter;
 using Catalog.API.Extensions;
 using Catalog.Infrastructure;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddCatalogRepositories();
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddCors();
+builder.Services.AddFluentValidation();
 // Configure services and application
 builder.Services.Configure<CosmosDBOptions>(builder.Configuration.GetSection(CosmosDBOptions.SectionName));
 

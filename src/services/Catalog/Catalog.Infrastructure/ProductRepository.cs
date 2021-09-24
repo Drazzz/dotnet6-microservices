@@ -16,12 +16,14 @@ namespace Catalog.Infrastructure
             _context = catalogDbContext;
         }
 
-        public async Task CreateProduct(Product product, CancellationToken cancellationToken = default)
+        public async Task<Guid> CreateProduct(Product product, CancellationToken cancellationToken = default)
         {
             ArgumentNullException.ThrowIfNull(product, nameof(product));
 
             await _context.Products.AddAsync(product, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
+
+            return product.Id;
         }
 
         public async Task<bool> DeleteProduct(Guid id, CancellationToken cancellationToken = default)

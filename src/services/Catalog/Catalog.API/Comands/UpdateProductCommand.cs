@@ -1,4 +1,18 @@
-﻿namespace Catalog.API.Models;
+﻿using FluentValidation;
+
+namespace Catalog.API.Models;
+
+public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand>
+{
+    public UpdateProductCommandValidator()
+    {
+        RuleFor(p => p.Id).NotEmpty();
+        RuleFor(p => p.CategoryId)
+            .GreaterThanOrEqualTo(1)
+            .LessThanOrEqualTo(5)
+            ;
+    }
+}
 
 public sealed class UpdateProductCommand
 {

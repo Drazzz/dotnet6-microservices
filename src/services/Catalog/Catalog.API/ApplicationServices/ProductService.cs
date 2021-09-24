@@ -35,5 +35,14 @@ namespace Catalog.API.ApplicationServices
             return await _productRepository.UpdateProduct(product, token)
                 .ConfigureAwait(false);
         }
+
+        internal Task<Guid> AddNewProduct(AddNewProductCommand addNewProductCommand, CancellationToken token)
+        {
+            ArgumentNullException.ThrowIfNull(addNewProductCommand, nameof(addNewProductCommand));
+            _logger.LogInformation($"Adding the new product {addNewProductCommand}");
+
+            var product = Product.From(addNewProductCommand.Name, addNewProductCommand.Description, addNewProductCommand.Summary, addNewProductCommand.Currency, addNewProductCommand.Amount, addNewProductCommand.CategoryId);
+            return _productRepository.CreateProduct(product, token);
+        }
     }
 }

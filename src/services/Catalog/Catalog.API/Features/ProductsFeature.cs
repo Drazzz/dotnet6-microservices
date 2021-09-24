@@ -53,4 +53,15 @@ internal class ProductsFeature
             ? Results.NoContent()
             : Results.NotFound()
         ;
+
+    internal static Func<AddNewProductCommand, ProductService, CancellationToken, Task<IResult>> AddNewProduct()
+    {
+        return async (AddNewProductCommand command, ProductService service, CancellationToken token) =>
+        {
+            var id = await service.AddNewProduct(command, token);
+            return id == Guid.Empty
+                ? Results.BadRequest()
+                : Results.Created($"/api/products/{id}", id);
+        };
+    }
 }
