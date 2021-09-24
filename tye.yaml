@@ -1,0 +1,61 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: microservices-app
+# extensions:
+#   - name: zipkin
+services:
+  - name: catalog-api
+    project: src/services/Catalog/Catalog.API/Catalog.API.csproj
+    replicas: 2
+    # env:
+    #   - name: ASPNETCORE_mongodb__CollectionName
+    #     value: collection-name-tye
+    #   - name: ASPNETCORE_mongodb__DatabaseName
+    #     value: db-name-tye
+    #   - name: ASPNETCORE_mongodb__Seed
+    #     value: false
+    #   - name: ASPNETCORE_mongodb__SetRandomDatabaseSuffix
+    #     value: false
+    tags:
+    - internal_api
+  # - name: catalog-grpc
+  #   project: src/services/Catalog/Catalog.Grpc/Catalog.Grpc.csproj
+  #   replicas: 2
+  #   env:
+  #     - name: ASPNETCORE_mongodb__CollectionName
+  #       value: collection-name-tye
+  #     - name: ASPNETCORE_mongodb__DatabaseName
+  #       value: db-name-tye
+  #     - name: ASPNETCORE_mongodb__Seed
+  #       value: false
+  #     - name: ASPNETCORE_mongodb__SetRandomDatabaseSuffix
+  #       value: false
+  #   tags:
+  #   - internal_api
+  # - name: mongo
+  #   image: mongo
+  #   env:
+  #     - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+  #       value: root
+  #     - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+  #       value: example      
+  #   bindings:
+  #     - port: 27017
+  #       connectionString: "mongodb://${host}:${port}"
+  # - name: mongo-express
+  #   image: mongo-express
+  #   bindings:
+  #     - port: 8081
+  #       containerPort: 8081
+  #       protocol: http
+  #   env:
+  #     - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+  #       value: root
+  #     - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+  #       value: example
+  #   tags:
+  #   - infra
