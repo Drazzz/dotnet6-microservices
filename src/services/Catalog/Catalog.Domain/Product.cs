@@ -1,4 +1,4 @@
-﻿
+﻿using BuildingBlocks.Domain;
 using NodaTime;
 
 namespace Catalog.Domain
